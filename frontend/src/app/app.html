@@ -1,0 +1,63 @@
+<router-outlet />
+
+
+<mat-sidenav-container class="layout-container">
+
+  <mat-sidenav mode="side" opened class="menu-lateral">
+
+    <div class="logo">
+      <span class="logo-icon">🐾</span>
+      <h2>Petshop</h2>
+    </div>
+
+    <p class="menu-titulo">MENU PRINCIPAL</p>
+
+    <mat-nav-list>
+
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="menu-ativo">
+        <span class="menu-icone">1 - </span>
+        <span>Dashboard</span>
+      </a>
+
+      <a mat-list-item routerLink="/clientes">
+        <span class="menu-icone">2 - </span>
+        <span>Clientes</span>
+      </a>
+
+      <a mat-list-item routerLink="/animais">
+        <span class="menu-icone">3 - </span>
+        <span>Animais</span>
+      </a>
+
+      <a mat-list-item routerLink="/produtos">
+        <span class="menu-icone">4 - </span>
+        <span>Produtos</span>
+      </a>
+
+      <a mat-list-item routerLink="/servicos">
+        <span class="menu-icone">5 - </span>
+        <span>Serviços</span>
+      </a>
+
+      <a mat-list-item routerLink="/vendas">
+        <span class="menu-icone">6 - </span>
+        <span>Vendas</span>
+      </a>
+
+    </mat-nav-list>
+
+    <div class="menu-rodape">
+      <p>Petshop Sistema</p>
+      <small>Gestão completa para seu negócio</small>
+    </div>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content class="conteudo-principal">
+
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+

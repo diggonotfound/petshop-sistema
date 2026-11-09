@@ -1,0 +1,92 @@
+
+.layout-container {
+  width: 100%;
+  min-height: 100vh;
+  background: #f4f7fb;
+}
+
+.menu-lateral {
+  width: 250px;
+  background: #ffffff;
+  border-right: 1px solid #e8edf2;
+  padding: 20px 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 12px 30px;
+
+  h2 {
+    color: #00897b;
+    font-size: 23px;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.logo-icon {
+  font-size: 30px;
+}
+
+.menu-titulo {
+  color: #a0aec0;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 0 12px;
+  margin-bottom: 12px;
+}
+
+.menu-lateral a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #526174;
+  border-radius: 9px;
+  margin-bottom: 8px;
+  text-decoration: none;
+}
+
+.menu-icone {
+  font-size: 19px;
+}
+
+.menu-lateral a:hover {
+  background: #e8f5f3;
+  color: #00897b;
+}
+
+.menu-lateral a.menu-ativo {
+  background: #e0f2f1;
+  color: #00897b;
+  font-weight: bold;
+}
+
+.menu-rodape {
+  position: absolute;
+  bottom: 25px;
+  left: 24px;
+
+  p {
+    color: #526174;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  small {
+    color: #a0aec0;
+    font-size: 11px;
+  }
+}
+
+.conteudo-principal {
+  background: #f4f7fb;
+}
+
+@media (max-width: 700px) {
+  .menu-lateral {
+    width: 190px;
+  }
+}
