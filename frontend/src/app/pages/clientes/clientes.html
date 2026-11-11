@@ -1,0 +1,61 @@
+
+<main class="pagina-clientes">
+  <header class="cabecalho">
+    <div>
+      <h1>Clientes</h1>
+      <p>Gerencie os clientes cadastrados no Petshop.</p>
+    </div>
+  </header>
+
+  <mat-card appearance="outlined" class="card-cadastro">
+    <mat-card-header>
+      <mat-card-title>Novo Cliente</mat-card-title>
+      <mat-card-subtitle>
+        Preencha os dados para cadastrar um cliente.
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      
+        
+        <div class="formulario">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Nome completo</mat-label>
+                <input matInput placeholder="Digite o nome do cliente"
+                [(ngModel)]="nome">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>CPF</mat-label>
+                <input matInput placeholder="000.000.000-00"
+                [(ngModel)]="cpf">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Telefone</mat-label>
+                <input matInput placeholder="(00) 00000-0000"
+                [(ngModel)]="telefone">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>E-mail</mat-label>
+                <input matInput type="email" placeholder="cliente@email.com"
+                [(ngModel)]="email">
+            </mat-form-field>
+
+            <div class="acoes">
+                <button mat-raised-button color="primary"
+                    (click)="cadastrarCliente()">
+                    Cadastrar cliente
+                </button>
+            </div>
+
+            <p>{{ mensagem }}</p>
+
+        </div>
+
+
+    </mat-card-content>
+  </mat-card>
+</main>

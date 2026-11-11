@@ -1,0 +1,61 @@
+
+.pagina-clientes {
+  padding: 32px;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.cabecalho {
+  margin-bottom: 28px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #263238;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.card-cadastro {
+  max-width: 900px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.formulario {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.acoes {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+button {
+  padding: 22px 28px;
+}
+
+@media (max-width: 600px) {
+  .pagina-clientes {
+    padding: 16px;
+  }
+
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+}
