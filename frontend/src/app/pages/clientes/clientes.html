@@ -57,5 +57,37 @@
 
 
     </mat-card-content>
-  </mat-card>
+  
+
+    </mat-card>
+
+        <section class="lista-clientes">
+            <h2>Clientes cadastrados</h2>
+
+            p *ngIf="listaClientes.length === 0">
+                Nenhum cliente cadastrado ainda.
+            </p>
+
+            <table *ngIf="listaClientes.length > 0">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let cliente of listaClientes">
+                        <td>{{ cliente.nome }}</td>
+                        <td>{{ cliente.cpf }}</td>
+                        <td>{{ cliente.telefone }}</td>
+                        <td>{{ cliente.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
 </main>
+
