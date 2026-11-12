@@ -47,7 +47,7 @@
             <div class="acoes">
                 <button mat-raised-button color="primary"
                     (click)="cadastrarCliente()">
-                    Cadastrar cliente
+                    {{ indiceEmEdicao !== null ? 'Atualizar Cliente' : 'Cadastrar Cliente' }}
                 </button>
             </div>
 
@@ -64,7 +64,7 @@
         <section class="lista-clientes">
             <h2>Clientes cadastrados</h2>
 
-            <p></p> *ngIf="listaClientes.length === 0">
+            <p *ngIf="listaClientes.length === 0">
                 Nenhum cliente cadastrado ainda.
             </p>
 
@@ -75,15 +75,22 @@
                         <th>CPF</th>
                         <th>Telefone</th>
                         <th>E-mail</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let cliente of listaClientes">
+                    <tr *ngFor="let cliente of listaClientes; let i = index">
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.cpf }}</td>
                         <td>{{ cliente.telefone }}</td>
                         <td>{{ cliente.email }}</td>
+
+                        <td>
+                            <button mat-button color="primary" (click)="editarCliente(i)">
+                            Editar
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

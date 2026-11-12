@@ -24,33 +24,55 @@ export class Clientes {
   mensagem = '';
 
   listaClientes: Cliente[] = [];
+  
+  indiceEmEdicao: number | null = null;
 
   cadastrarCliente() {
-
     if (
-      !this.nome.trim() ||
-      !this.cpf.trim() ||
-      !this.telefone.trim() ||
-      !this.email.trim()
-    ) {
-      this.mensagem = 'Preencha todos os campos!';
-      return;
-    }
+    !this.nome.trim() ||
+    !this.cpf.trim() ||
+    !this.telefone.trim() ||
+    !this.email.trim()
+  ) {
+    this.mensagem = 'Preencha todos os campos!';
+    return;
+  }
 
-    const novoCliente: Cliente = {
-      nome: this.nome.trim(),
-      cpf: this.cpf.trim(),
-      telefone: this.telefone.trim(),
-      email: this.email.trim()
-    };
+  const cliente: Cliente = {
+    nome: this.nome.trim(),
+    cpf: this.cpf.trim(),
+    telefone: this.telefone.trim(),
+    email: this.email.trim()
+  };
 
-    this.listaClientes.push(novoCliente);
-
+  if (this.indiceEmEdicao !== null) {
+    this.listaClientes[this.indiceEmEdicao] = cliente;
+    this.mensagem = 'Cliente atualizado com sucesso!';
+    this.indiceEmEdicao = null;
+  } else {
+    this.listaClientes.push(cliente);
     this.mensagem = 'Cliente cadastrado com sucesso!';
+  }
 
-    this.nome = '';
-    this.cpf = '';
-    this.telefone = '';
-    this.email = '';
+  this.limparFormulario();
+}
+
+editarCliente(index: number) {
+  const cliente = this.listaClientes[index];
+
+  this.nome = cliente.nome;
+  this.cpf = cliente.cpf;
+  this.telefone = cliente.telefone;
+  this.email = cliente.email;
+
+  this.indiceEmEdicao = index;
+  this.mensagem = 'Altere os dados e clique em Atualizar cliente.';
+}
+
+limparFormulario() {
+  this.nome = '';
+  this.cpf = '';
+  this.telefone = '';
+  this.email = '';
   }
 }
