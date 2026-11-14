@@ -2,14 +2,14 @@
 .pagina-clientes {
   padding: 32px;
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: #f4f7fb;
 }
 
 .cabecalho {
   margin-bottom: 28px;
 
   h1 {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
     color: #263238;
     margin-bottom: 8px;
@@ -23,9 +23,10 @@
 
 .card-cadastro {
   max-width: 900px;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 16px;
   background-color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .formulario {
@@ -46,27 +47,18 @@ mat-form-field {
   margin-top: 8px;
 }
 
-button {
+.acoes button {
   padding: 22px 28px;
+  border-radius: 8px;
 }
-
-@media (max-width: 600px) {
-  .pagina-clientes {
-    padding: 16px;
-  }
-
-  .formulario {
-    grid-template-columns: 1fr;
-  }
-}
-
 
 .lista-clientes {
-  margin-top: 30px;
+  margin-top: 32px;
   padding: 24px;
   background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   overflow-x: auto;
 
   h2 {
@@ -88,12 +80,12 @@ button {
   th {
     background-color: #eaf2f8;
     color: #263238;
-    padding: 14px;
+    padding: 16px;
     font-weight: 600;
   }
 
   td {
-    padding: 14px;
+    padding: 16px;
     border-bottom: 1px solid #eeeeee;
     color: #455a64;
   }
@@ -101,4 +93,43 @@ button {
   tr:hover td {
     background-color: #f5f9fc;
   }
+
+  button {
+    margin-right: 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pagina-clientes {
+    padding: 16px;
+  }
+
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .card-cadastro,
+  .lista-clientes {
+    padding: 16px;
+  }
+}
+
+.mensagem {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mensagem.sucesso {
+  color: #166534;
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
+}
+
+.mensagem.erro {
+  color: #991b1b;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
 }

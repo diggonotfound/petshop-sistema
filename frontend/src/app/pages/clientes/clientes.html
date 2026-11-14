@@ -29,13 +29,15 @@
             <mat-form-field appearance="outline">
                 <mat-label>CPF</mat-label>
                 <input matInput placeholder="000.000.000-00"
-                [(ngModel)]="cpf">
+                [(ngModel)]="cpf"
+                (ngModelChange)="formatarCPF()">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Telefone</mat-label>
                 <input matInput placeholder="(00) 00000-0000"
-                [(ngModel)]="telefone">
+                [(ngModel)]="telefone"
+                (ngModelChange)="formatarTelefone()">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -51,7 +53,12 @@
                 </button>
             </div>
 
-            <p>{{ mensagem }}</p>
+            <p
+                class="meonsagem"
+                [class.sucesso]="mensagem.includes('sucesso')"
+                [class.erro]="mensagem !== '' && !mensagem.includes('sucesso')">
+                {{ mensagem }}
+            </p>
 
         </div>
 
@@ -88,7 +95,11 @@
 
                         <td>
                             <button mat-button color="primary" (click)="editarCliente(i)">
-                            Editar
+                                Editar
+                            </button>
+
+                            <button mat-button color="warn" (click)="excluirCliente(i)">
+                                Excluir
                             </button>
                         </td>
                     </tr>
