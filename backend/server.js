@@ -60,13 +60,70 @@ app.post('/clientes', async (req, res) => {
     }
 });
 
+app.put('/clientes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, cpf, telefone, email } = req.body;
+
+        const [resultado] = await db.query(
+            'UPDATE clientes SET nome = ?, cpf = ?, telefone = ?, email = ? WHERE id = ?',
+            [nome, cpf, telefone, email, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Cliente não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Cliente atualizado com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao atualizar cliente:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao atualizar cliente.'
+        });
+    }
+});
+
+app.delete('/clientes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [resultado] = await db.query(
+            'DELETE FROM clientes WHERE id = ?',
+            [id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Cliente não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Cliente excluído com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao excluir cliente:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao excluir cliente.'
+        });
+    }
+});
+
 app.get('/teste-banco', async (req, res) => {
     try {
         const [resultado] = await db.query('SELECT 1 AS conectado');
+
         res.json({
             mensagem: 'Banco de dados conectado!',
             resultado
         });
+
     } catch (erro) {
         console.error('Erro ao conectar:', erro.message);
         res.status(500).json({

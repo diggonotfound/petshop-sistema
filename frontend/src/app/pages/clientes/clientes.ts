@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ClientesService } from '../../services/clientes.service';
 
 interface Cliente {
@@ -29,7 +29,10 @@ export class Clientes implements OnInit {
   indiceEmEdicao: number | null = null;
   termoBusca = '';
 
-  constructor(private clientesService: ClientesService) {}
+  constructor(
+  private clientesService: ClientesService,
+  private cdr: ChangeDetectorRef
+) {}
 
   ngOnInit(): void {
     this.carregarClientes();
@@ -222,6 +225,12 @@ export class Clientes implements OnInit {
       this.clientesService.excluirCliente(cliente.id).subscribe({
         next: () => {
           this.mensagem = 'Cliente excluído com sucesso!';
+
+          this.listaClientes = this.listaClientes.filter(
+            c => c.id !== cliente.id
+          );
+
+          this.cdr.detectChanges();
 
           if (this.indiceEmEdicao === index) {
             this.indiceEmEdicao = null;
