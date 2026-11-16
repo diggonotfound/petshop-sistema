@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Clientes } from './pages/clientes/clientes';
+import { provideHttpClient } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -18,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [App, Dashboard, Clientes],
   imports: [BrowserModule, AppRoutingModule,MatCardModule,MatSidenavModule,MatListModule,MatIconModule,MatFormFieldModule,MatInputModule,MatButtonModule,FormsModule],
-  providers: [provideBrowserGlobalErrorListeners(), provideClientHydration()],
+  providers: [provideBrowserGlobalErrorListeners(), provideClientHydration(),provideHttpClient()],
   bootstrap: [App],
 })
 export class AppModule {}

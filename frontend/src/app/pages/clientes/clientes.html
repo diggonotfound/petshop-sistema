@@ -70,12 +70,16 @@
 
         <section class="lista-clientes">
             <h2>Clientes cadastrados</h2>
+            <mat-form-field appearance="outline" class="campo-busca">
+                <mat-label>Buscar cliente por nome ou CPF</mat-label>
+                <input matInput [(ngModel)]="termoBusca">
+            </mat-form-field>
 
-            <p *ngIf="listaClientes.length === 0">
-                Nenhum cliente cadastrado ainda.
+            <p *ngIf="clientesFiltrados.length === 0">
+                {{ termoBusca ? 'Nenhum cliente encontrado.' : 'Nenhum cliente cadastrado ainda.' }}
             </p>
 
-            <table *ngIf="listaClientes.length > 0">
+            <table *ngIf="clientesFiltrados.length > 0">
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -87,19 +91,21 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let cliente of listaClientes; let i = index">
+                    <tr *ngFor="let cliente of clientesFiltrados; let i = index">
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.cpf }}</td>
                         <td>{{ cliente.telefone }}</td>
                         <td>{{ cliente.email }}</td>
 
                         <td>
-                            <button mat-button color="primary" (click)="editarCliente(i)">
-                                Editar
+                            <button mat-button color="primary"
+                                    (click)="editarCliente(listaClientes.indexOf(cliente))">
+                                 Editar
                             </button>
 
-                            <button mat-button color="warn" (click)="excluirCliente(i)">
-                                Excluir
+                            <button mat-button color="warn"
+                                    (click)="excluirCliente(listaClientes.indexOf(cliente))">
+                                  Excluir
                             </button>
                         </td>
                     </tr>
