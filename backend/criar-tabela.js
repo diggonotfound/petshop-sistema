@@ -26,6 +26,21 @@ async function criarTabela() {
         `);
 
         console.log('Tabela clientes criada com sucesso!');
+        
+        await conexao.query(`
+            CREATE TABLE IF NOT EXISTS animais (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+            nome VARCHAR(100) NOT NULL,
+            especie VARCHAR(50) NOT NULL,
+            raca VARCHAR(100),
+            sexo VARCHAR(20),
+            data_nascimento DATE,
+            cliente_id INT NOT NULL,
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+        )
+`   );
+
+console.log('Tabela animais criada com sucesso!');
 
     } catch (erro) {
         console.error('Erro ao criar tabela:', erro.message);
