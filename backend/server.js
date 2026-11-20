@@ -38,6 +38,121 @@ app.get('/clientes', async (req, res) => {
     }
 });
 
+app.get('/animais', async (req, res) => {
+    try {
+        const [animais] = await db.query(`
+            SELECT animais.*, clientes.nome AS nome_cliente
+            FROM animais
+            INNER JOIN clientes ON animais.cliente_id = clientes.id
+            ORDER BY animais.id DESC
+        `);
+
+        res.json(animais);
+
+    } catch (erro) {
+        console.error('Erro ao buscar animais:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao buscar animais.'
+        });
+    }
+});
+
+app.post('/animais', async (req, res) => {
+    try {
+        const {
+            nome,
+            especie,
+            raca,
+            sexo,
+            data_nascimento,
+            cliente_id
+        } = req.body;
+
+        const [resultado] = await db.query(
+            `INSERT INTO animais
+            (nome, especie, raca, sexo, data_nascimento, cliente_id)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [nome, especie, raca, sexo, data_nascimento, cliente_id]
+        );
+
+        res.status(201).json({
+            mensagem: 'Animal cadastrado com sucesso!',
+            id: resultado.insertId
+        });
+
+    } catch (erro) {
+        console.error('Erro ao cadastrar animal:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao cadastrar animal.'
+        });
+    }
+});
+
+app.put('/animais/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            nome,
+            especie,
+            raca,
+            sexo,
+            data_nascimento,
+            cliente_id
+        } = req.body;
+
+        const [resultado] = await db.query(
+            `UPDATE animais
+            SET nome = ?, especie = ?, raca = ?, sexo = ?,
+            data_nascimento = ?, cliente_id = ?
+            WHERE id = ?`,
+            [nome, especie, raca, sexo, data_nascimento, cliente_id, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Animal não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Animal atualizado com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao atualizar animal:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao atualizar animal.'
+        });
+    }
+});
+
+app.delete('/animais/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [resultado] = await db.query(
+            'DELETE FROM animais WHERE id = ?',
+            [id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Animal não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Animal excluído com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao excluir animal:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao excluir animal.'
+        });
+    }
+});
+
 app.post('/clientes', async (req, res) => {
     try {
         const { nome, cpf, telefone, email } = req.body;

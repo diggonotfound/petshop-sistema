@@ -1,0 +1,140 @@
+
+<main class="pagina-animais">
+
+  <header class="cabecalho">
+    <div>
+      <h1>Animais</h1>
+      <p>Gerencie os pets cadastrados no petshop.</p>
+    </div>
+
+    <button type="button" (click)="abrirFormulario()">
+      + Cadastrar animal
+    </button>
+  </header>
+
+  <section class="conteudo formulario" *ngIf="mostrarFormulario">
+
+    <div class="titulo-secao">
+      <h2>Cadastro de animal</h2>
+      <p>Preencha os dados do pet.</p>
+    </div>
+
+    <form>
+
+      <label>Nome do animal</label>
+      <input
+        type="text"
+        name="nome"
+        [(ngModel)]="animal.nome"
+        placeholder="Nome do pet"
+      >
+
+      <h3>Escolha a espécie</h3>
+
+      <div class="especies">
+        <button
+          type="button"
+          *ngFor="let especie of especies"
+          (click)="selecionarEspecie(especie)"
+          [class.selecionada]="animal.especie === especie"
+        >
+          <span>
+            {{ especie === 'Cachorro' ? '🐶' :
+               especie === 'Gato' ? '🐱' :
+               especie === 'Macaco' ? '🐵' :
+               especie === 'Coelho' ? '🐰' :
+               especie === 'Pássaro' ? '🐦' : '🐾' }}
+          </span>
+          {{ especie }}
+        </button>
+      </div>
+
+      <label>Raça ou variedade</label>
+      <select
+        name="raca"
+        [(ngModel)]="animal.raca"
+        [disabled]="!animal.especie"
+      >
+        <option value="">Selecione</option>
+        <option
+          *ngFor="let raca of (racas[animal.especie] || [])"
+          [value]="raca"
+        >
+          {{ raca }}
+        </option>
+      </select>
+
+      <label>Sexo</label>
+      <select name="sexo" [(ngModel)]="animal.sexo">
+        <option value="">Selecione</option>
+        <option value="Macho">Macho</option>
+        <option value="Fêmea">Fêmea</option>
+      </select>
+
+      <label>Data de nascimento</label>
+      <input
+        type="date"
+        name="data_nascimento"
+        [(ngModel)]="animal.data_nascimento"
+      >
+
+      <label>Tutor responsável</label>
+      <select name="cliente_id" [(ngModel)]="animal.cliente_id">
+        <option [ngValue]="null">Selecione o tutor</option>
+        <option
+          *ngFor="let cliente of listaClientes"
+          [ngValue]="cliente.id"
+        >
+          {{ cliente.nome }}
+        </option>
+      </select>
+
+        <div class="acoes-formulario">
+            <button type="button" class="btn-limpar" (click)="limparFormulario()">Limpar</button>
+            <button type="button" class="btn-cancelar" (click)="mostrarFormulario = false">Cancelar</button>
+            <button type="button" class="btn-salvar" (click)="salvarAnimal()">Salvar animal</button>
+        </div>
+
+    </form>
+  </section>
+
+  <section class="conteudo">
+
+    <div class="titulo-secao">
+      <h2>Lista de animais</h2>
+      <p>Confira os animais registrados e seus tutores.</p>
+    </div>
+
+    <div class="tabela-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Espécie</th>
+            <th>Raça</th>
+            <th>Sexo</th>
+            <th>Data de nascimento</th>
+            <th>Tutor</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let animal of listaAnimais">
+            <td>{{ animal.nome }}</td>
+            <td>{{ animal.especie }}</td>
+            <td>{{ animal.raca || 'Não informado' }}</td>
+            <td>{{ animal.sexo || 'Não informado' }}</td>
+            <td>{{ animal.data_nascimento || 'Não informado' }}</td>
+            <td>{{ animal.nome_cliente }}</td>
+          </tr>
+
+          <tr *ngIf="listaAnimais.length === 0">
+            <td colspan="6">Nenhum animal cadastrado.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+</main>
