@@ -16,6 +16,7 @@ export class Animais implements OnInit {
 
   mostrarFormulario = false;
   mensagem = '';
+  animalIdEmEdicao: number | null = null;
 
   animal = {
     nome: '',
@@ -86,6 +87,7 @@ export class Animais implements OnInit {
   }
 
   abrirFormulario(): void {
+    this.limparFormulario();
     this.mostrarFormulario = true;
     this.mensagem = '';
   }
@@ -100,10 +102,33 @@ export class Animais implements OnInit {
       cliente_id: null
     };
 
+    this.animalIdEmEdicao = null;
+    this.mensagem = '';
+  }
+
+  editarAnimal(animal: any): void {
+    this.animalIdEmEdicao = animal.id;
+
+    this.animal = {
+      nome: animal.nome || '',
+      especie: animal.especie || '',
+      raca: animal.raca || '',
+      sexo: animal.sexo || '',
+      data_nascimento: animal.data_nascimento
+        ? String(animal.data_nascimento).substring(0, 10)
+        : '',
+      cliente_id: animal.cliente_id
+        ? Number(animal.cliente_id)
+        : null
+    };
+
+    this.mostrarFormulario = true;
     this.mensagem = '';
   }
 
   salvarAnimal(): void {
+    console.log('CLIQUEI EM SALVAR ANIMAL');
+    
     if (
       !this.animal.nome.trim() ||
       !this.animal.especie ||
@@ -118,18 +143,39 @@ export class Animais implements OnInit {
       data_nascimento: this.animal.data_nascimento || null
     };
 
-    this.animaisService.cadastrarAnimal(dadosAnimal).subscribe({
-      next: () => {
-        this.mensagem = 'Animal cadastrado com sucesso!';
-        this.carregarAnimais();
-        this.limparFormulario();
-        this.mostrarFormulario = false;
-      },
-      error: (erro) => {
-        console.error('Erro ao cadastrar animal:', erro);
-        this.mensagem = 'Não foi possível cadastrar o animal.';
-      }
-    });
+    if (this.animalIdEmEdicao !== null) {
+
+      this.animaisService.atualizarAnimal(
+        this.animalIdEmEdicao,
+        dadosAnimal
+      ).subscribe({
+        next: () => {
+          this.mensagem = 'Animal atualizado com sucesso!';
+          this.carregarAnimais();
+          this.limparFormulario();
+          this.mostrarFormulario = false;
+        },
+        error: (erro) => {
+          console.error('Erro ao atualizar animal:', erro);
+          this.mensagem = 'Não foi possível atualizar o animal.';
+        }
+      });
+
+    } else {
+
+      this.animaisService.cadastrarAnimal(dadosAnimal).subscribe({
+        next: () => {
+          this.mensagem = 'Animal cadastrado com sucesso!';
+          this.carregarAnimais();
+          this.limparFormulario();
+          this.mostrarFormulario = false;
+        },
+        error: (erro) => {
+          console.error('Erro ao cadastrar animal:', erro);
+          this.mensagem = 'Não foi possível cadastrar o animal.';
+        }
+      });
+    }
   }
 
   excluirAnimal(id: number): void {

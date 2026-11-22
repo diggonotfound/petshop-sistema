@@ -6,8 +6,13 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://potential-space-fiesta-gx6w99g4pxpqf9g9-4200.app.github.dev',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const db = mysql.createPool({
@@ -230,6 +235,144 @@ app.delete('/clientes/:id', async (req, res) => {
         });
     }
 });
+
+
+// LISTAR PRODUTOS
+app.get('/produtos', async (req, res) => {
+    try {
+        const [produtos] = await db.query(
+            'SELECT * FROM produtos ORDER BY id DESC'
+        );
+
+        res.json(produtos);
+
+    } catch (erro) {
+        console.error('Erro ao buscar produtos:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao buscar produtos.'
+        });
+    }
+});
+
+// CADASTRAR PRODUTO
+app.post('/produtos', async (req, res) => {
+    try {
+        const {
+            nome,
+            categoria,
+            descricao,
+            preco_compra,
+            preco_venda,
+            estoque,
+            estoque_minimo
+        } = req.body;
+
+        const [resultado] = await db.query(
+            `INSERT INTO produtos
+            (nome, categoria, descricao, preco_compra, preco_venda, estoque, estoque_minimo)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                nome,
+                categoria,
+                descricao || null,
+                preco_compra,
+                preco_venda,
+                estoque,
+                estoque_minimo
+            ]
+        );
+
+        res.status(201).json({
+            mensagem: 'Produto cadastrado com sucesso!',
+            id: resultado.insertId
+        });
+
+    } catch (erro) {
+        console.error('Erro ao cadastrar produto:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao cadastrar produto.'
+        });
+    }
+});
+
+// ATUALIZAR PRODUTO
+app.put('/produtos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            nome,
+            categoria,
+            descricao,
+            preco_compra,
+            preco_venda,
+            estoque,
+            estoque_minimo
+        } = req.body;
+
+        const [resultado] = await db.query(
+            `UPDATE produtos
+            SET nome = ?, categoria = ?, descricao = ?,
+                preco_compra = ?, preco_venda = ?,
+                estoque = ?, estoque_minimo = ?
+            WHERE id = ?`,
+            [
+                nome,
+                categoria,
+                descricao || null,
+                preco_compra,
+                preco_venda,
+                estoque,
+                estoque_minimo,
+                id
+            ]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Produto não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Produto atualizado com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao atualizar produto:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao atualizar produto.'
+        });
+    }
+});
+
+// EXCLUIR PRODUTO
+app.delete('/produtos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [resultado] = await db.query(
+            'DELETE FROM produtos WHERE id = ?',
+            [id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Produto não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Produto excluído com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao excluir produto:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao excluir produto.'
+        });
+    }
+});
+
 
 app.get('/teste-banco', async (req, res) => {
     try {
