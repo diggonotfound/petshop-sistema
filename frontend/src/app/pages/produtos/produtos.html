@@ -1,0 +1,122 @@
+<main class="pagina-produtos">
+
+  <header class="cabecalho">
+    <div>
+      <h1>Produtos</h1>
+      <p>Gerencie os produtos e o estoque do petshop.</p>
+    </div>
+
+    <button type="button" (click)="abrirFormulario()">
+      + Cadastrar produto
+    </button>
+  </header>
+
+  <section class="conteudo">
+
+    <div class="mensagem" *ngIf="mensagem">
+      {{ mensagem }}
+    </div>
+
+    <section class="formulario" *ngIf="mostrarFormulario">
+
+      <h2>{{ indiceEmEdicao === null ? 'Cadastrar produto' : 'Editar produto' }}</h2>
+
+      <div class="campos">
+
+        <div class="campo">
+          <label>Nome do produto *</label>
+          <input type="text" [(ngModel)]="produto.nome" placeholder="Ex: Ração para cães">
+        </div>
+
+        <div class="campo">
+          <label>Categoria *</label>
+          <select [(ngModel)]="produto.categoria">
+            <option value="">Selecione</option>
+            <option value="Ração">Ração</option>
+            <option value="Petiscos">Petiscos</option>
+            <option value="Higiene">Higiene</option>
+            <option value="Brinquedos">Brinquedos</option>
+            <option value="Acessórios">Acessórios</option>
+            <option value="Medicamentos">Medicamentos</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+
+        <div class="campo campo-completo">
+          <label>Descrição</label>
+          <textarea [(ngModel)]="produto.descricao" placeholder="Descrição do produto"></textarea>
+        </div>
+
+        <div class="campo">
+          <label>Preço de compra (R$)</label>
+          <input type="number" min="0" step="0.01" [(ngModel)]="produto.preco_compra">
+        </div>
+
+        <div class="campo">
+          <label>Preço de venda (R$)</label>
+          <input type="number" min="0" step="0.01" [(ngModel)]="produto.preco_venda">
+        </div>
+
+        <div class="campo">
+          <label>Quantidade em estoque</label>
+          <input type="number" min="0" [(ngModel)]="produto.estoque">
+        </div>
+
+        <div class="campo">
+          <label>Estoque mínimo</label>
+          <input type="number" min="0" [(ngModel)]="produto.estoque_minimo">
+        </div>
+
+      </div>
+
+      <div class="acoes-formulario">
+        <button type="button" (click)="salvarProduto()">Salvar produto</button>
+        <button type="button" class="botao-cancelar" (click)="cancelarFormulario()">Cancelar</button>
+      </div>
+
+    </section>
+
+    <section class="lista-produtos">
+
+      <h2>Lista de produtos</h2>
+
+      <div class="tabela-responsiva">
+        <table>
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th>Compra</th>
+              <th>Venda</th>
+              <th>Estoque</th>
+              <th>Estoque mínimo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of listaProdutos">
+              <td>{{ item.nome }}</td>
+              <td>{{ item.categoria }}</td>
+              <td>{{ item.preco_compra | currency:'BRL' }}</td>
+              <td>{{ item.preco_venda | currency:'BRL' }}</td>
+              <td>{{ item.estoque }}</td>
+              <td>{{ item.estoque_minimo }}</td>
+              <td class="acoes">
+                <button type="button" class="botao-editar" (click)="editarProduto(item)">Editar</button>
+                <button type="button" class="botao-excluir" (click)="excluirProduto(item.id)">Excluir</button>
+              </td>
+            </tr>
+
+            <tr *ngIf="listaProdutos.length === 0">
+              <td colspan="7" class="sem-registros">Nenhum produto cadastrado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </section>
+
+</main>

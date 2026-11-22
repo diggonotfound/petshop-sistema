@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Clientes } from './pages/clientes/clientes';
 import { Animais } from './pages/animais/animais';
+import { Produtos } from './pages/produtos/produtos';
 
 const routes: Routes = [
 
@@ -18,6 +19,9 @@ const routes: Routes = [
   },
   {
     path: 'animais', component: Animais
+  },
+  {
+    path: 'produtos', component: Produtos
   }
 ];
 

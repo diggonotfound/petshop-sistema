@@ -1,0 +1,195 @@
+.pagina-produtos {
+  padding: 30px;
+  color: #263238;
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+  }
+
+  p {
+    margin: 0;
+    color: #78909c;
+  }
+
+  button {
+    background: #00897b;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+
+.conteudo {
+  background: white;
+  border-radius: 12px;
+}
+
+.mensagem {
+  padding: 14px;
+  margin-bottom: 20px;
+  background: #e0f2f1;
+  color: #00695c;
+  border-radius: 8px;
+}
+
+.formulario,
+.lista-produtos {
+  background: white;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+
+  h2 {
+    margin: 0 0 22px;
+    font-size: 20px;
+  }
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #cfd8dc;
+    border-radius: 7px;
+    font: inherit;
+    outline: none;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #00897b;
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.acoes-formulario {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+
+  button {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 7px;
+    background: #00897b;
+    color: white;
+    cursor: pointer;
+  }
+
+  .botao-cancelar {
+    background: #78909c;
+  }
+}
+
+.tabela-responsiva {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 750px;
+
+  th,
+  td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #eceff1;
+  }
+
+  th {
+    background: #f5f7f7;
+    color: #546e7a;
+    font-size: 13px;
+  }
+
+  td {
+    font-size: 14px;
+  }
+}
+
+.acoes {
+  display: flex;
+  gap: 8px;
+
+  button {
+    border: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .botao-editar {
+    background: #1976d2;
+  }
+
+  .botao-excluir {
+    background: #e53935;
+  }
+}
+
+.sem-registros {
+  text-align: center;
+  color: #78909c;
+  padding: 30px;
+}
+
+@media (max-width: 650px) {
+  .pagina-produtos {
+    padding: 16px;
+  }
+
+  .cabecalho {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .campos {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-completo {
+    grid-column: auto;
+  }
+}
