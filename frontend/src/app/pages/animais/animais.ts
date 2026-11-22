@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AnimaisService } from '../../services/animais.service';
 import { ClientesService } from '../../services/clientes.service';
 
@@ -45,7 +46,8 @@ export class Animais implements OnInit {
 
   constructor(
     private animaisService: AnimaisService,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -57,9 +59,9 @@ export class Animais implements OnInit {
     this.animaisService.listarAnimais().subscribe({
       next: (animais) => {
         console.log('Animais recebidos:', animais);
-        console.log('Animais recebidos:', animais);
         this.listaAnimais = animais;
-    },
+        this.cdr.detectChanges();
+      },
       error: (erro) => {
         console.error('Erro ao carregar animais:', erro);
       }
@@ -71,7 +73,7 @@ export class Animais implements OnInit {
       next: (clientes) => {
         console.log('Clientes recebidos:', clientes);
         this.listaClientes = clientes;
-    },
+      },
       error: (erro) => {
         console.error('Erro ao carregar tutores:', erro);
       }
@@ -100,32 +102,53 @@ export class Animais implements OnInit {
 
     this.mensagem = '';
   }
+
   salvarAnimal(): void {
-  if (
-    !this.animal.nome.trim() ||
-    !this.animal.especie ||
-    !this.animal.cliente_id
-  ) {
-    this.mensagem = 'Preencha o nome, a espécie e o tutor do animal.';
-    return;
+    if (
+      !this.animal.nome.trim() ||
+      !this.animal.especie ||
+      !this.animal.cliente_id
+    ) {
+      this.mensagem = 'Preencha o nome, a espécie e o tutor do animal.';
+      return;
+    }
+
+    const dadosAnimal = {
+      ...this.animal,
+      data_nascimento: this.animal.data_nascimento || null
+    };
+
+    this.animaisService.cadastrarAnimal(dadosAnimal).subscribe({
+      next: () => {
+        this.mensagem = 'Animal cadastrado com sucesso!';
+        this.carregarAnimais();
+        this.limparFormulario();
+        this.mostrarFormulario = false;
+      },
+      error: (erro) => {
+        console.error('Erro ao cadastrar animal:', erro);
+        this.mensagem = 'Não foi possível cadastrar o animal.';
+      }
+    });
   }
 
-  const dadosAnimal = {
-    ...this.animal,
-    data_nascimento: this.animal.data_nascimento || null
-  };
+  excluirAnimal(id: number): void {
+    const confirmar = confirm(
+      'Tem certeza que deseja excluir este animal?'
+    );
 
-  this.animaisService.cadastrarAnimal(dadosAnimal).subscribe({
-    next: () => {
-      this.mensagem = 'Animal cadastrado com sucesso!';
-      this.carregarAnimais();
-      this.limparFormulario();
-      this.mostrarFormulario = false;
-    },
-    error: (erro) => {
-      console.error('Erro ao cadastrar animal:', erro);
-      this.mensagem = 'Não foi possível cadastrar o animal.';
+    if (confirmar) {
+      this.animaisService.excluirAnimal(id).subscribe({
+        next: () => {
+          this.mensagem = 'Animal excluído com sucesso!';
+          this.carregarAnimais();
+        },
+        error: (erro) => {
+          console.error('Erro ao excluir animal:', erro);
+          this.mensagem = 'Não foi possível excluir o animal.';
+        }
+      });
     }
-  });
-}
+  }
+
 }

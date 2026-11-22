@@ -41,7 +41,9 @@ export class Clientes implements OnInit {
   carregarClientes(): void {
     this.clientesService.listarClientes().subscribe({
       next: (clientes) => {
+        console.log('CLIENTES RECEBIDOS DA API:', clientes);
         this.listaClientes = clientes;
+        this.cdr.detectChanges();
       },
       error: (erro) => {
         console.error('Erro ao buscar clientes:', erro);
