@@ -6,8 +6,19 @@ require('dotenv').config();
 
 const app = express();
 
+const allowedOrigins = [
+    'https://potential-space-fiesta-gx6w99g4pxpqf9g9-4200.app.github.dev',
+    process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-    origin: 'https://potential-space-fiesta-gx6w99g4pxpqf9g9-4200.app.github.dev',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Origem não permitida pelo CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -719,7 +730,7 @@ app.get('/teste-banco', async (req, res) => {
     }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
