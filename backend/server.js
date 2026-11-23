@@ -723,7 +723,7 @@ app.get('/teste-banco', async (req, res) => {
         });
 
     } catch (erro) {
-        console.error('Erro ao conectar:', erro.message);
+        console.error('Erro completo ao conectar:', erro);
         res.status(500).json({
             mensagem: 'Não foi possível conectar ao banco.'
         });
