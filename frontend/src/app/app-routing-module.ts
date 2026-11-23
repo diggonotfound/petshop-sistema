@@ -4,6 +4,8 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Clientes } from './pages/clientes/clientes';
 import { Animais } from './pages/animais/animais';
 import { Produtos } from './pages/produtos/produtos';
+import { Servicos } from './pages/servicos/servicos';
+import { Vendas } from './pages/vendas/vendas';
 
 const routes: Routes = [
 
@@ -22,6 +24,12 @@ const routes: Routes = [
   },
   {
     path: 'produtos', component: Produtos
+  },
+  {
+    path: 'servicos', component: Servicos
+  },
+  {
+    path: 'vendas', component: Vendas
   }
 ];
 

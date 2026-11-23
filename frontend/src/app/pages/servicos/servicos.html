@@ -1,0 +1,127 @@
+<main class="pagina-servicos">
+
+  <header class="cabecalho">
+    <div>
+      <h1>Serviços</h1>
+      <p>Gerencie os serviços oferecidos pelo petshop.</p>
+    </div>
+
+    <button class="botao-principal" (click)="abrirFormulario()">
+      + Cadastrar serviço
+    </button>
+  </header>
+
+  <p class="mensagem" *ngIf="mensagem">
+    {{ mensagem }}
+  </p>
+
+  <section class="conteudo">
+
+    <div class="titulo-secao">
+      <h2>Lista de serviços</h2>
+      <p>Confira os serviços cadastrados.</p>
+    </div>
+
+    <form *ngIf="mostrarFormulario" (ngSubmit)="salvarServico()" class="formulario">
+
+      <h2>{{ indiceEmEdicao !== null ? 'Editar serviço' : 'Novo serviço' }}</h2>
+
+      <div class="campo">
+        <label>Nome do serviço</label>
+        <input
+          type="text"
+          name="nome"
+          [(ngModel)]="servico.nome"
+          placeholder="Ex: Banho e tosa"
+          required>
+      </div>
+
+      <div class="campo">
+        <label>Descrição</label>
+        <textarea
+          name="descricao"
+          [(ngModel)]="servico.descricao"
+          placeholder="Descreva o serviço">
+        </textarea>
+      </div>
+
+      <div class="campos-duplos">
+
+        <div class="campo">
+          <label>Preço (R$)</label>
+          <input
+            type="number"
+            name="preco"
+            [(ngModel)]="servico.preco"
+            min="0"
+            step="0.01"
+            required>
+        </div>
+
+        <div class="campo">
+          <label>Duração (minutos)</label>
+          <input
+            type="number"
+            name="duracao_minutos"
+            [(ngModel)]="servico.duracao_minutos"
+            min="1"
+            required>
+        </div>
+
+      </div>
+
+      <div class="acoes-formulario">
+        <button type="submit" class="botao-principal">
+          {{ indiceEmEdicao !== null ? 'Salvar alterações' : 'Salvar serviço' }}
+        </button>
+
+        <button type="button" class="botao-cancelar" (click)="cancelarFormulario()">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+
+    <div class="tabela-container">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Duração</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of listaServicos">
+            <td>{{ item.nome }}</td>
+            <td>{{ item.descricao || '-' }}</td>
+            <td>{{ item.preco | currency:'BRL' }}</td>
+            <td>{{ item.duracao_minutos }} min</td>
+            <td class="acoes">
+              <button class="botao-editar" (click)="editarServico(item)">
+                Editar
+              </button>
+
+              <button class="botao-excluir" (click)="excluirServico(item.id)">
+                Excluir
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="listaServicos.length === 0">
+            <td colspan="5" class="vazio">
+              Nenhum serviço cadastrado.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </section>
+
+</main>

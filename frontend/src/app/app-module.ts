@@ -8,7 +8,6 @@ import { Animais } from './pages/animais/animais';
 import { Produtos } from './pages/produtos/produtos';
 import { provideHttpClient } from '@angular/common/http';
 
-
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -17,10 +16,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-
+import { Servicos } from './pages/servicos/servicos';
+import { Vendas } from './pages/vendas/vendas';
 
 @NgModule({
-  declarations: [App, Dashboard, Clientes, Animais, Produtos],
+  declarations: [App, Dashboard, Clientes, Animais, Produtos, Servicos, Vendas],
   imports: [
     BrowserModule,
     AppRoutingModule,

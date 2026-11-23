@@ -236,8 +236,6 @@ app.delete('/clientes/:id', async (req, res) => {
     }
 });
 
-
-// LISTAR PRODUTOS
 app.get('/produtos', async (req, res) => {
     try {
         const [produtos] = await db.query(
@@ -254,7 +252,6 @@ app.get('/produtos', async (req, res) => {
     }
 });
 
-// CADASTRAR PRODUTO
 app.post('/produtos', async (req, res) => {
     try {
         const {
@@ -295,7 +292,6 @@ app.post('/produtos', async (req, res) => {
     }
 });
 
-// ATUALIZAR PRODUTO
 app.put('/produtos/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -345,7 +341,6 @@ app.put('/produtos/:id', async (req, res) => {
     }
 });
 
-// EXCLUIR PRODUTO
 app.delete('/produtos/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -369,6 +364,305 @@ app.delete('/produtos/:id', async (req, res) => {
         console.error('Erro ao excluir produto:', erro.message);
         res.status(500).json({
             mensagem: 'Erro ao excluir produto.'
+        });
+    }
+});
+
+app.get('/servicos', async (req, res) => {
+    try {
+        const [servicos] = await db.query(
+            'SELECT * FROM servicos ORDER BY id DESC'
+        );
+
+        res.json(servicos);
+
+    } catch (erro) {
+        console.error('Erro ao buscar serviços:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao buscar serviços.'
+        });
+    }
+});
+
+app.post('/servicos', async (req, res) => {
+    try {
+        const { nome, descricao, preco, duracao_minutos } = req.body;
+
+        const [resultado] = await db.query(
+            `INSERT INTO servicos
+            (nome, descricao, preco, duracao_minutos)
+            VALUES (?, ?, ?, ?)`,
+            [nome, descricao || null, preco, duracao_minutos]
+        );
+
+        res.status(201).json({
+            mensagem: 'Serviço cadastrado com sucesso!',
+            id: resultado.insertId
+        });
+
+    } catch (erro) {
+        console.error('Erro ao cadastrar serviço:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao cadastrar serviço.'
+        });
+    }
+});
+
+app.put('/servicos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, descricao, preco, duracao_minutos } = req.body;
+
+        const [resultado] = await db.query(
+            `UPDATE servicos
+            SET nome = ?, descricao = ?, preco = ?, duracao_minutos = ?
+            WHERE id = ?`,
+            [nome, descricao || null, preco, duracao_minutos, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Serviço não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Serviço atualizado com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao atualizar serviço:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao atualizar serviço.'
+        });
+    }
+});
+
+app.delete('/servicos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [resultado] = await db.query(
+            'DELETE FROM servicos WHERE id = ?',
+            [id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: 'Serviço não encontrado.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Serviço excluído com sucesso!'
+        });
+
+    } catch (erro) {
+        console.error('Erro ao excluir serviço:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao excluir serviço.'
+        });
+    }
+});
+
+app.get('/vendas', async (req, res) => {
+    try {
+        const [vendas] = await db.query(`
+            SELECT
+                vendas.*,
+                clientes.nome AS nome_cliente
+            FROM vendas
+            INNER JOIN clientes ON vendas.cliente_id = clientes.id
+            ORDER BY vendas.id DESC
+        `);
+
+        res.json(vendas);
+
+    } catch (erro) {
+        console.error('Erro ao buscar vendas:', erro.message);
+        res.status(500).json({
+            mensagem: 'Erro ao buscar vendas.'
+        });
+    }
+});
+
+app.post('/vendas', async (req, res) => {
+    const conexao = await db.getConnection();
+
+    try {
+        const { cliente_id, itens } = req.body;
+
+        if (!cliente_id || !Array.isArray(itens) || itens.length === 0) {
+            return res.status(400).json({
+                mensagem: 'Informe o cliente e pelo menos um item.'
+            });
+        }
+
+        await conexao.beginTransaction();
+
+        let valorTotal = 0;
+        const itensValidados = [];
+
+        for (const item of itens) {
+            const quantidade = Number(item.quantidade);
+
+            if (!Number.isInteger(quantidade) || quantidade <= 0) {
+                throw new Error('Quantidade inválida.');
+            }
+
+            let nomeItem;
+            let precoUnitario;
+            let produtoId = null;
+            let servicoId = null;
+
+            if (item.tipo === 'produto') {
+                const [produtos] = await conexao.query(
+                    'SELECT nome, preco_venda, estoque FROM produtos WHERE id = ? FOR UPDATE',
+                    [item.item_id]
+                );
+
+                if (produtos.length === 0) {
+                    throw new Error('Produto não encontrado.');
+                }
+
+                const produto = produtos[0];
+
+                if (produto.estoque < quantidade) {
+                    throw new Error(`Estoque insuficiente para ${produto.nome}.`);
+                }
+
+                nomeItem = produto.nome;
+                precoUnitario = Number(produto.preco_venda);
+                produtoId = item.item_id;
+
+            } else if (item.tipo === 'servico') {
+                const [servicos] = await conexao.query(
+                    'SELECT nome, preco FROM servicos WHERE id = ?',
+                    [item.item_id]
+                );
+
+                if (servicos.length === 0) {
+                    throw new Error('Serviço não encontrado.');
+                }
+
+                nomeItem = servicos[0].nome;
+                precoUnitario = Number(servicos[0].preco);
+                servicoId = item.item_id;
+
+            } else {
+                throw new Error('Tipo de item inválido.');
+            }
+
+            const subtotal = precoUnitario * quantidade;
+            valorTotal += subtotal;
+
+            itensValidados.push({
+                produto_id: produtoId,
+                servico_id: servicoId,
+                nome_item: nomeItem,
+                preco_unitario: precoUnitario,
+                quantidade,
+                subtotal
+            });
+        }
+
+        const [resultadoVenda] = await conexao.query(
+            'INSERT INTO vendas (cliente_id, valor_total) VALUES (?, ?)',
+            [cliente_id, valorTotal]
+        );
+
+        const vendaId = resultadoVenda.insertId;
+
+        for (const item of itensValidados) {
+            await conexao.query(
+                `INSERT INTO itens_venda
+                (venda_id, produto_id, servico_id, nome_item, preco_unitario, quantidade, subtotal)
+                VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    vendaId,
+                    item.produto_id,
+                    item.servico_id,
+                    item.nome_item,
+                    item.preco_unitario,
+                    item.quantidade,
+                    item.subtotal
+                ]
+            );
+
+            if (item.produto_id !== null) {
+                await conexao.query(
+                    'UPDATE produtos SET estoque = estoque - ? WHERE id = ?',
+                    [item.quantidade, item.produto_id]
+                );
+            }
+        }
+
+        await conexao.commit();
+
+        res.status(201).json({
+            mensagem: 'Venda cadastrada com sucesso!',
+            id: vendaId,
+            valor_total: valorTotal
+        });
+
+    } catch (erro) {
+        await conexao.rollback();
+
+        console.error('Erro ao cadastrar venda:', erro.message);
+
+        res.status(400).json({
+            mensagem: erro.message || 'Erro ao cadastrar venda.'
+        });
+
+    } finally {
+        conexao.release();
+    }
+});
+
+
+app.get('/vendas/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [vendas] = await db.query(`
+            SELECT
+                vendas.*,
+                clientes.nome AS nome_cliente
+            FROM vendas
+            INNER JOIN clientes ON vendas.cliente_id = clientes.id
+            WHERE vendas.id = ?
+        `, [id]);
+
+        if (vendas.length === 0) {
+            return res.status(404).json({
+                mensagem: 'Venda não encontrada.'
+            });
+        }
+
+        const [itens] = await db.query(`
+            SELECT
+                id,
+                nome_item,
+                preco_unitario,
+                quantidade,
+                subtotal,
+                produto_id,
+                servico_id
+            FROM itens_venda
+            WHERE venda_id = ?
+            ORDER BY id ASC
+        `, [id]);
+
+        res.json({
+            ...vendas[0],
+            itens
+        });
+
+    } catch (erro) {
+        console.error('Erro ao buscar detalhes da venda:', erro.message);
+
+        res.status(500).json({
+            mensagem: 'Erro ao buscar detalhes da venda.'
         });
     }
 });
