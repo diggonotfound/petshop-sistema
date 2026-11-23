@@ -18,7 +18,7 @@ export class Dashboard implements OnInit {
   carregando = true;
   mensagemErro = '';
 
-  private apiUrl = 'https://potential-space-fiesta-gx6w99g4pxpqf9g9-3000.app.github.dev/dashboard';
+  private apiUrl = 'https://petshop-backend-ebv2.onrender.com/dashboard';
 
   constructor(
     private http: HttpClient,

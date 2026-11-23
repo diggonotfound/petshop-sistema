@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AnimaisService {
 
-  private apiUrl = 'https://potential-space-fiesta-gx6w99g4pxpqf9g9-3000.app.github.dev/animais';
+  private apiUrl = 'https://petshop-backend-ebv2.onrender.com/animais';
 
   constructor(private http: HttpClient) {}
 
