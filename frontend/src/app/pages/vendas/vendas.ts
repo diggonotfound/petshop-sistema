@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { VendasService } from '../../services/vendas';
 import { ClientesService } from '../../services/clientes.service';
@@ -26,6 +27,9 @@ export class Vendas implements OnInit {
   valorTotal = 0;
 
   mensagem = '';
+
+  vendaSelecionada: any = null;
+  carregandoDetalhes = false;
 
   constructor(
     private vendasService: VendasService,
@@ -186,5 +190,28 @@ export class Vendas implements OnInit {
         this.cd.detectChanges();
       }
     });
+  }
+
+  verDetalhesVenda(id: number): void {
+    this.carregandoDetalhes = true;
+    this.vendaSelecionada = null;
+
+    this.vendasService.buscarVendaPorId(id).subscribe({
+      next: venda => {
+        this.vendaSelecionada = venda;
+        this.carregandoDetalhes = false;
+        this.cd.detectChanges();
+      },
+      error: erro => {
+        this.mensagem = erro.error?.mensagem ||
+          'Erro ao carregar detalhes da venda.';
+        this.carregandoDetalhes = false;
+        this.cd.detectChanges();
+      }
+    });
+  }
+
+  fecharDetalhesVenda(): void {
+    this.vendaSelecionada = null;
   }
 }
