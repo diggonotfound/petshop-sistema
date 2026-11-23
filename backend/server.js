@@ -668,6 +668,40 @@ app.get('/vendas/:id', async (req, res) => {
 });
 
 
+app.get('/dashboard', async (req, res) => {
+    try {
+        const [clientes] = await db.query(
+            'SELECT COUNT(*) AS total FROM clientes'
+        );
+
+        const [animais] = await db.query(
+            'SELECT COUNT(*) AS total FROM animais'
+        );
+
+        const [produtos] = await db.query(
+            'SELECT COUNT(*) AS total FROM produtos'
+        );
+
+        const [vendas] = await db.query(
+            'SELECT COUNT(*) AS total FROM vendas'
+        );
+
+        res.json({
+            clientes: clientes[0].total,
+            animais: animais[0].total,
+            produtos: produtos[0].total,
+            vendas: vendas[0].total
+        });
+
+    } catch (erro) {
+        console.error('Erro ao carregar Dashboard:', erro.message);
+
+        res.status(500).json({
+            mensagem: 'Erro ao buscar os dados do Dashboard.'
+        });
+    }
+});
+
 app.get('/teste-banco', async (req, res) => {
     try {
         const [resultado] = await db.query('SELECT 1 AS conectado');
